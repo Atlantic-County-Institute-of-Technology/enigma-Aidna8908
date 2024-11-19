@@ -18,12 +18,7 @@ def encode_message():
     key = int(key) % 26
     for x in message:
         if 'a' <= x <= 'z':
-            if ord(x) + key >= 123:
-                result += chr(ord(x) + int(x) - 26)
-            elif ord(x) + key <= 96:
-                result += chr(ord(x) + key + 26)
-            else:
-                result += chr(ord(x) + key)
+            result += chr(((ord(x) - 97 + key) % 26) + 97)
     print(result)
     pass
 
@@ -31,9 +26,9 @@ def encode_message():
 # encodes a target file, similarly to encode_message, except now targeting a filename
 def encode_file():
     result = ""
-    x = input("what file")
+    filename = input("What file? ")
     # Read the message from a file
-    with open(x + '.txt', 'r') as file:
+    with open(filename + '.txt', 'r') as file:
         message = file.read().lower()
 
     key = input("What is your key? ")
@@ -41,30 +36,48 @@ def encode_file():
 
     for x in message:
         if 'a' <= x <= 'z':
-            if ord(x) + key >= 123:
-                result += chr(ord(x) + key - 26)
-            elif ord(x) + key <= 96:
-                result += chr(ord(x) + key + 26)
-            else:
-                result += chr(ord(x) + key)
+            result += chr(((ord(x) - 97 + key) % 26) + 97)
+
     print(f"Please select an option:\n"
-          f"[1]: write into file.\n"
-          f"[2]: print result.")
+          f"[1]: Write into file.\n"
+          f"[2]: Print result.")
     selection = input("Choose an option:")
 
-    if selection == 1:
-        with open('output.txt', 'w') as file:
+    if selection == "1":
+        with open(filename +'.txt', 'w') as file:
             file.write(result)
-
-        print("The result has been written to output.txt")
-    if selection == 2:
+        print("The result has been written to file")
+    elif selection == "2":
         print(result)
-    pass
 
 
 # decodes target file using a user-specified key. If key is unknown, a keypress should
 # call decode_unknown_key()
 def decode_file():
+    
+    result = ""
+    filename = input("What file? ")
+    # Read the message from a file
+    with open(filename + '.txt', 'r') as file:
+        message = file.read().lower()
+    key = input("What is your key? ")
+    key = int(key) % 26
+
+    for x in message:
+        if 'a' <= x <= 'z':
+            result += chr(((ord(x) - 97 - key) % 26) + 97)
+
+    print(f"Please select an option:\n"
+          f"[1]: Write into file.\n"
+          f"[2]: Print result.")
+    selection = input("Choose an option:")
+
+    if selection == "1":
+        with open(filename +'.txt', 'w') as file:
+            file.write(result)
+        print("The result has been written to file")
+    elif selection == "2":
+        print(result)
     pass
 
 
